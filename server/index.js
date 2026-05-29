@@ -58,24 +58,27 @@ if (isProd) {
 
   // App entry: if the shop has no stored token yet, start OAuth; otherwise
   // serve the embedded React app.
-  app.get("/*", async (req, res, next) => {
-    if (req.path.startsWith("/api")) return next();
-
-    const shop = shopify.utils.sanitizeShop(req.query.shop, false);
-    if (shop) {
-      const store = await prisma.store.findUnique({ where: { shopDomain: shop } });
-      if (!store) {
-        const params = new URLSearchParams({ shop });
-        if (req.query.host) params.set("host", req.query.host);
-        return res.redirect(`/api/auth?${params.toString()}`);
-      }
+  app.get("/*", async (req, res) => {
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ error: "not_found" });
     }
 
     try {
+      const shop = shopify.utils.sanitizeShop(req.query.shop, false);
+      if (shop) {
+        const store = await prisma.store.findUnique({ where: { shopDomain: shop } });
+        if (!store) {
+          const params = new URLSearchParams({ shop });
+          if (req.query.host) params.set("host", req.query.host);
+          return res.redirect(`/api/auth?${params.toString()}`);
+        }
+      }
       res.set("Content-Type", "text/html").send(readIndexHtml());
     } catch (error) {
-      console.error("[server] failed to serve frontend:", error.message);
-      res.status(500).send("Frontend build not found. Run `npm run build`.");
+      console.error("[server] failed to serve app entry:", error.message);
+      res
+        .status(500)
+        .send("The app could not start. Please try again or reinstall from your Shopify admin.");
     }
   });
 }

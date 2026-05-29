@@ -1,0 +1,38 @@
+# Shopify app configuration. Used by the Shopify CLI (`shopify app config push`).
+# Replace client_id with your app's API key from the Partner Dashboard, and the
+# URLs with your deployed app URL.
+
+name = "Polished"
+client_id = "REPLACE_WITH_SHOPIFY_API_KEY"
+application_url = "https://your-app-url.example.com"
+embedded = true
+
+[access_scopes]
+scopes = "read_products,write_products,read_translations,write_translations"
+
+[auth]
+redirect_urls = [
+  "https://your-app-url.example.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/api/webhooks"
+
+  [[webhooks.subscriptions]]
+  topics = [ "products/create", "products/update" ]
+  uri = "/api/webhooks"
+
+  [[webhooks.subscriptions]]
+  compliance_topics = [
+    "customers/data_request",
+    "customers/redact",
+    "shop/redact"
+  ]
+  uri = "/api/webhooks"
+
+[pos]
+embedded = false
