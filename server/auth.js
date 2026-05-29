@@ -19,7 +19,9 @@ export async function performTokenExchange(shop, sessionToken) {
   });
 
   const store = await storeSession(session);
-  await registerWebhooks(session);
+  // Webhooks (app/uninstalled, products/*, GDPR compliance) are declared in
+  // shopify.app.toml and auto-subscribed by Shopify on install — no runtime
+  // registration needed under managed installation.
   return store;
 }
 
