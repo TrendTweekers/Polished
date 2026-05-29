@@ -82,6 +82,8 @@ model Settings {
   storeId                  String   @unique
   tone                     String   @default("neutral") // formal | neutral | casual
   autoTranslateNewProducts Boolean  @default(false)
+  translateTitles          Boolean  @default(true)
+  translateDescriptions    Boolean  @default(true)
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt
 

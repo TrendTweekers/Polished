@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, BlockStack, Text, Select, Checkbox } from "@shopify/polaris";
+import { Card, BlockStack, Text, Select, Checkbox, Divider } from "@shopify/polaris";
 import { api } from "../lib/api.js";
 import { showToast } from "../lib/toast.js";
 
@@ -48,6 +48,31 @@ export default function SettingsCard({ settings, onChange }) {
           onChange={(checked) => save({ autoTranslateNewProducts: checked })}
           helpText="When a new product is added in Shopify, translate it automatically (still requires review before publishing)."
         />
+
+        <Divider />
+
+        <BlockStack gap="200">
+          <Text as="h3" variant="headingSm">
+            Fields to translate
+          </Text>
+          <Text as="p" tone="subdued" variant="bodySm">
+            Reselling branded products (Nike, Adidas…)? Titles are mostly brand and
+            model names — translate descriptions only and leave titles untouched.
+          </Text>
+
+          <Checkbox
+            label="Translate product titles"
+            checked={settings?.translateTitles !== false}
+            disabled={saving}
+            onChange={(checked) => save({ translateTitles: checked })}
+          />
+          <Checkbox
+            label="Translate product descriptions"
+            checked={settings?.translateDescriptions !== false}
+            disabled={saving}
+            onChange={(checked) => save({ translateDescriptions: checked })}
+          />
+        </BlockStack>
       </BlockStack>
     </Card>
   );

@@ -266,6 +266,7 @@ export default function App() {
       <ReviewModal
         product={reviewProduct}
         open={Boolean(reviewProduct)}
+        settings={me?.settings}
         onClose={() => setReviewProduct(null)}
         onSaved={async () => {
           const [freshProducts] = await Promise.all([loadProducts(), refreshSummary()]);

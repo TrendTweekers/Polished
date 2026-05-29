@@ -55,7 +55,10 @@ function FieldEditor({ label, field, value, onChange, multiline }) {
   );
 }
 
-export default function ReviewModal({ product, open, onClose, onSaved }) {
+export default function ReviewModal({ product, open, onClose, onSaved, settings }) {
+  const showTitle = settings?.translateTitles !== false;
+  const showDesc = settings?.translateDescriptions !== false;
+
   const [titleText, setTitleText] = useState("");
   const [descText, setDescText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -123,7 +126,7 @@ export default function ReviewModal({ product, open, onClose, onSaved }) {
     }
   }
 
-  const hasTranslation = Boolean(titleText || descText);
+  const hasTranslation = Boolean((showTitle && titleText) || (showDesc && descText));
 
   return (
     <Modal
@@ -151,20 +154,24 @@ export default function ReviewModal({ product, open, onClose, onSaved }) {
             </Banner>
           )}
 
-          <FieldEditor
-            label="Title"
-            field={product.title}
-            value={titleText}
-            onChange={setTitleText}
-          />
-          <Divider />
-          <FieldEditor
-            label="Description"
-            field={product.description}
-            value={descText}
-            onChange={setDescText}
-            multiline
-          />
+          {showTitle && (
+            <FieldEditor
+              label="Title"
+              field={product.title}
+              value={titleText}
+              onChange={setTitleText}
+            />
+          )}
+          {showTitle && showDesc && <Divider />}
+          {showDesc && (
+            <FieldEditor
+              label="Description"
+              field={product.description}
+              value={descText}
+              onChange={setDescText}
+              multiline
+            />
+          )}
         </BlockStack>
       </Modal.Section>
     </Modal>

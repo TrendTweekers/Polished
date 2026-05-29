@@ -13,7 +13,14 @@ const FIELD_TO_SHOPIFY_KEY = {
 
 async function getSettings(storeId) {
   const settings = await prisma.settings.findUnique({ where: { storeId } });
-  return settings ?? { tone: "neutral", autoTranslateNewProducts: false };
+  return (
+    settings ?? {
+      tone: "neutral",
+      autoTranslateNewProducts: false,
+      translateTitles: true,
+      translateDescriptions: true,
+    }
+  );
 }
 
 async function getGlossary(storeId) {
@@ -35,19 +42,24 @@ export async function runTranslationForProduct(store, productId, { force = false
   const titleRow = rows.find((r) => r.field === "title");
   const descRow = rows.find((r) => r.field === "description");
 
-  // Skip fields that were manually edited unless the caller forces a redo.
-  const editedTitle = titleRow?.manuallyEdited && !force;
-  const editedDesc = descRow?.manuallyEdited && !force;
-
-  if (editedTitle && editedDesc) {
-    return { translated: 0, skipped: rows.length };
-  }
-
   const [settings, glossary] = await Promise.all([
     getSettings(store.id),
     getGlossary(store.id),
   ]);
 
+  // A field is translated only when (a) its toggle is on, (b) the row exists,
+  // and (c) it isn't a manual edit we'd clobber (unless force is set).
+  const editedTitle = titleRow?.manuallyEdited && !force;
+  const editedDesc = descRow?.manuallyEdited && !force;
+  const doTitle = settings.translateTitles !== false && !!titleRow && !editedTitle;
+  const doDesc = settings.translateDescriptions !== false && !!descRow && !editedDesc;
+
+  if (!doTitle && !doDesc) {
+    return { translated: 0, skipped: rows.length };
+  }
+
+  // We still send both fields to the model (title gives the description useful
+  // context) but only persist the fields that are enabled.
   const result = await translateProduct({
     title: titleRow?.originalText ?? "",
     description: descRow?.originalText ?? "",
@@ -58,38 +70,34 @@ export async function runTranslationForProduct(store, productId, { force = false
   let translated = 0;
   let skipped = 0;
 
-  if (titleRow) {
-    if (editedTitle) {
-      skipped += 1;
-    } else {
-      await prisma.productTranslation.update({
-        where: { id: titleRow.id },
-        data: {
-          translatedText: result.translatedTitle,
-          qualityFlags: result.qualityFlags,
-          status: "done",
-          manuallyEdited: false,
-        },
-      });
-      translated += 1;
-    }
+  if (doTitle) {
+    await prisma.productTranslation.update({
+      where: { id: titleRow.id },
+      data: {
+        translatedText: result.translatedTitle,
+        qualityFlags: result.qualityFlags,
+        status: "done",
+        manuallyEdited: false,
+      },
+    });
+    translated += 1;
+  } else if (titleRow) {
+    skipped += 1;
   }
 
-  if (descRow) {
-    if (editedDesc) {
-      skipped += 1;
-    } else {
-      await prisma.productTranslation.update({
-        where: { id: descRow.id },
-        data: {
-          translatedText: result.translatedDescription,
-          qualityFlags: result.qualityFlags,
-          status: "done",
-          manuallyEdited: false,
-        },
-      });
-      translated += 1;
-    }
+  if (doDesc) {
+    await prisma.productTranslation.update({
+      where: { id: descRow.id },
+      data: {
+        translatedText: result.translatedDescription,
+        qualityFlags: result.qualityFlags,
+        status: "done",
+        manuallyEdited: false,
+      },
+    });
+    translated += 1;
+  } else if (descRow) {
+    skipped += 1;
   }
 
   return { translated, skipped };
@@ -189,7 +197,15 @@ export async function publishProductTranslations(store, productId) {
     },
   });
 
-  const publishable = rows.filter((r) => r.translatedText && r.translatedText.trim() !== "");
+  const settings = await getSettings(store.id);
+  const fieldEnabled = {
+    title: settings.translateTitles !== false,
+    description: settings.translateDescriptions !== false,
+  };
+
+  const publishable = rows.filter(
+    (r) => fieldEnabled[r.field] && r.translatedText && r.translatedText.trim() !== ""
+  );
   if (publishable.length === 0) {
     throw new Error("Nothing to publish — translate this product first.");
   }

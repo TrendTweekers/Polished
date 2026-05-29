@@ -46,8 +46,18 @@ function groupByProduct(rows) {
   return [...map.values()];
 }
 
-function productStatus(product) {
-  const statuses = [product.title?.status, product.description?.status].filter(Boolean);
+function fieldsEnabled(settings) {
+  return {
+    title: settings?.translateTitles !== false,
+    description: settings?.translateDescriptions !== false,
+  };
+}
+
+// Overall status is derived only from the fields the merchant chose to translate.
+function productStatus(product, enabled = { title: true, description: true }) {
+  const statuses = [];
+  if (enabled.title && product.title) statuses.push(product.title.status);
+  if (enabled.description && product.description) statuses.push(product.description.status);
   if (statuses.length === 0) return "pending";
   if (statuses.every((s) => s === "published")) return "published";
   if (statuses.some((s) => s === "stale")) return "stale";
@@ -66,12 +76,13 @@ apiRouter.get(
       where: { storeId: store.id },
     });
     const products = groupByProduct(rows);
+    const enabled = fieldsEnabled(settings);
 
     const total = products.length;
     const translated = products.filter((p) =>
-      ["done", "published"].includes(productStatus(p))
+      ["done", "published"].includes(productStatus(p, enabled))
     ).length;
-    const published = products.filter((p) => productStatus(p) === "published").length;
+    const published = products.filter((p) => productStatus(p, enabled) === "published").length;
 
     let billing = { active: true, confirmationUrl: null };
     try {
@@ -82,7 +93,12 @@ apiRouter.get(
 
     res.json({
       shop: store.shopDomain,
-      settings: settings ?? { tone: "neutral", autoTranslateNewProducts: false },
+      settings: settings ?? {
+        tone: "neutral",
+        autoTranslateNewProducts: false,
+        translateTitles: true,
+        translateDescriptions: true,
+      },
       counts: { total, translated, published },
       billing: { enabled: config.billing.enabled, ...billing },
     });
@@ -96,13 +112,16 @@ apiRouter.get(
     const store = req.store;
     const { status, search } = req.query;
 
+    const settings = await prisma.settings.findUnique({ where: { storeId: store.id } });
+    const enabled = fieldsEnabled(settings);
+
     const rows = await prisma.productTranslation.findMany({
       where: { storeId: store.id },
       orderBy: { updatedAt: "desc" },
     });
     let products = groupByProduct(rows).map((p) => ({
       ...p,
-      overallStatus: productStatus(p),
+      overallStatus: productStatus(p, enabled),
     }));
 
     if (status && status !== "all") {
@@ -207,7 +226,8 @@ apiRouter.get(
 apiRouter.put(
   "/settings",
   a(async (req, res) => {
-    const { tone, autoTranslateNewProducts } = req.body ?? {};
+    const { tone, autoTranslateNewProducts, translateTitles, translateDescriptions } =
+      req.body ?? {};
     const data = {};
     if (tone !== undefined) {
       if (!VALID_TONES.includes(tone)) {
@@ -217,6 +237,12 @@ apiRouter.put(
     }
     if (autoTranslateNewProducts !== undefined) {
       data.autoTranslateNewProducts = Boolean(autoTranslateNewProducts);
+    }
+    if (translateTitles !== undefined) {
+      data.translateTitles = Boolean(translateTitles);
+    }
+    if (translateDescriptions !== undefined) {
+      data.translateDescriptions = Boolean(translateDescriptions);
     }
 
     const settings = await prisma.settings.upsert({
