@@ -1,9 +1,27 @@
 import express from "express";
+import { RequestedTokenType } from "@shopify/shopify-api";
 import { shopify, storeSession } from "./shopify.js";
 import { registerWebhooks } from "./webhooks.js";
 import { config } from "./config.js";
 
 export const authRouter = express.Router();
+
+/**
+ * Modern embedded-app auth: exchange an App Bridge session token for an offline
+ * access token (no cookies, no redirect). This is what powers install/auth from
+ * inside the Shopify admin iframe, where the legacy cookie OAuth flow fails.
+ */
+export async function performTokenExchange(shop, sessionToken) {
+  const { session } = await shopify.auth.tokenExchange({
+    shop,
+    sessionToken,
+    requestedTokenType: RequestedTokenType.OfflineAccessToken,
+  });
+
+  const store = await storeSession(session);
+  await registerWebhooks(session);
+  return store;
+}
 
 /**
  * Step 1 of OAuth: redirect the merchant to Shopify's consent screen.
