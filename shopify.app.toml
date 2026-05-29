@@ -3,8 +3,8 @@
 # URLs with your deployed app URL.
 
 name = "Polished"
-client_id = "REPLACE_WITH_SHOPIFY_API_KEY"
-application_url = "https://your-app-url.example.com"
+client_id = "8666b78a6f43df292b628f439389b934"
+application_url = "https://polished-production-5325.up.railway.app"
 embedded = true
 
 [access_scopes]
@@ -12,7 +12,7 @@ scopes = "read_products,write_products,read_translations,write_translations"
 
 [auth]
 redirect_urls = [
-  "https://your-app-url.example.com/api/auth/callback"
+  "https://polished-production-5325.up.railway.app/api/auth/callback"
 ]
 
 [webhooks]
