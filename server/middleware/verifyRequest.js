@@ -1,6 +1,14 @@
 import { shopify } from "../shopify.js";
 import { prisma } from "../db.js";
 import { performTokenExchange } from "../auth.js";
+import { config } from "../config.js";
+
+/** True if the stored grant covers every scope the app currently requires. */
+function hasRequiredScopes(store) {
+  if (!store?.scope) return false;
+  const granted = new Set(store.scope.split(",").map((s) => s.trim()));
+  return config.shopify.scopes.every((s) => granted.has(s));
+}
 
 /**
  * Verify the App Bridge session token (JWT) sent as a Bearer token on every
@@ -24,8 +32,9 @@ export async function verifyRequest(req, res, next) {
     const shopDomain = new URL(payload.dest).host;
 
     let store = await prisma.store.findUnique({ where: { shopDomain } });
-    if (!store) {
-      // No offline token yet — exchange the session token for one (auto-install).
+    if (!store || !hasRequiredScopes(store)) {
+      // No token yet, or the stored grant predates a scope change — (re)exchange
+      // the session token for a fresh offline token with the current scopes.
       try {
         store = await performTokenExchange(shopDomain, sessionToken);
       } catch (exchangeError) {
