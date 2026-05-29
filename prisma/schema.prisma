@@ -1,0 +1,89 @@
+// Prisma schema for Polished — Polish localization for Shopify stores.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  id          String   @id @default(cuid())
+  shopDomain  String   @unique
+  accessToken String
+  scope       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  translations ProductTranslation[]
+  glossary     GlossaryTerm[]
+  jobs         TranslationJob[]
+  settings     Settings?
+
+  @@index([shopDomain])
+}
+
+// One row per translatable field of a product (title / description).
+model ProductTranslation {
+  id               String   @id @default(cuid())
+  storeId          String
+  shopifyProductId String
+  field            String // "title" | "description"
+  originalText     String   @db.Text
+  translatedText   String?  @db.Text
+  status           String   @default("pending") // pending | done | published | stale
+  qualityFlags     String[] @default([])
+  manuallyEdited   Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, shopifyProductId, field])
+  @@index([storeId, status])
+  @@index([storeId, shopifyProductId])
+}
+
+model GlossaryTerm {
+  id            String   @id @default(cuid())
+  storeId       String
+  originalTerm  String
+  polishTerm    String
+  caseSensitive Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, originalTerm])
+  @@index([storeId])
+}
+
+model TranslationJob {
+  id             String    @id @default(cuid())
+  storeId        String
+  status         String    @default("pending") // pending | running | done | failed
+  totalItems     Int       @default(0)
+  processedItems Int       @default(0)
+  failedItems    Int       @default(0)
+  error          String?   @db.Text
+  createdAt      DateTime  @default(now())
+  completedAt    DateTime?
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId, status])
+}
+
+model Settings {
+  id                       String   @id @default(cuid())
+  storeId                  String   @unique
+  tone                     String   @default("neutral") // formal | neutral | casual
+  autoTranslateNewProducts Boolean  @default(false)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  store Store @relation(fields: [storeId], references: [id], onDelete: Cascade)
+}
