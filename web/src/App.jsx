@@ -14,6 +14,7 @@ import {
 } from "@shopify/polaris";
 import { api } from "./lib/api.js";
 import { showToast } from "./lib/toast.js";
+import HowItWorks from "./components/HowItWorks.jsx";
 import ProgressCard from "./components/ProgressCard.jsx";
 import ProductTable from "./components/ProductTable.jsx";
 import SettingsCard from "./components/SettingsCard.jsx";
@@ -180,12 +181,25 @@ export default function App() {
         )}
 
         <Layout.Section>
+          <HowItWorks />
+        </Layout.Section>
+
+        <Layout.Section>
           {loading ? (
             <Card>
               <SkeletonBodyText lines={3} />
             </Card>
           ) : (
             <ProgressCard counts={me?.counts} />
+          )}
+        </Layout.Section>
+
+        <Layout.Section>
+          {!loading && (
+            <SettingsCard
+              settings={me?.settings}
+              onChange={(settings) => setMe((m) => ({ ...m, settings }))}
+            />
           )}
         </Layout.Section>
 
@@ -245,15 +259,6 @@ export default function App() {
               products={products}
               onSelectionChange={setSelectedIds}
               onReview={setReviewProduct}
-            />
-          )}
-        </Layout.Section>
-
-        <Layout.Section variant="oneThird">
-          {!loading && (
-            <SettingsCard
-              settings={me?.settings}
-              onChange={(settings) => setMe((m) => ({ ...m, settings }))}
             />
           )}
         </Layout.Section>
