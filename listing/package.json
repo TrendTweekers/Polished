@@ -1,0 +1,16 @@
+{
+  "name": "polished-listing-assets",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Code-rendered Shopify App Store assets for Polished (Puppeteer + ffmpeg).",
+  "scripts": {
+    "render": "node render.mjs",
+    "icons": "node render-icons.mjs",
+    "screencast": "node record.mjs"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "puppeteer": "^23.11.1"
+  }
+}

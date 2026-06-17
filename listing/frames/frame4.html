@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><link rel="stylesheet" href="styles.css"></head>
+<body>
+<div class="stage">
+  <div class="brandrow"><div class="brandchip">PL</div><div class="wordmark">Polished</div></div>
+  <div class="headline">Lock brand terms. <span class="accent">Translate only what you need</span></div>
+  <div class="subhead">A glossary keeps your wording consistent, and per-field toggles skip brand-name titles when you resell.</div>
+
+  <div class="panel panel-narrow">
+    <div class="card" style="flex:1.35">
+      <div class="card-title">Glossary</div>
+      <div class="muted small mt6">Force specific terms to always translate a certain way. Respected on every translation.</div>
+      <div class="row gap8 mt14">
+        <span class="select" style="flex:1">Source term</span>
+        <span class="select" style="flex:1">Polish term</span>
+        <span class="btn btn-primary">Add term</span>
+      </div>
+      <table class="table mt10">
+        <thead><tr><th>Source term</th><th>Polish term</th><th>Case sensitive</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>free shipping</td><td>darmowa dostawa</td><td>No</td><td><span class="link" style="color:var(--red)">Delete</span></td></tr>
+          <tr><td>hoodie</td><td>bluza z kapturem</td><td>No</td><td><span class="link" style="color:var(--red)">Delete</span></td></tr>
+          <tr><td>checkout</td><td>kasa</td><td>No</td><td><span class="link" style="color:var(--red)">Delete</span></td></tr>
+          <tr><td>AuraGlow</td><td>AuraGlow</td><td>Yes</td><td><span class="link" style="color:var(--red)">Delete</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="flex:1;align-self:flex-start">
+      <div class="card-title">Fields to translate</div>
+      <div class="muted small mt6">Reselling branded products (Nike, Adidas)? Titles are mostly brand and model names. Translate descriptions only.</div>
+      <div class="checkrow mt18"><span class="tick"></span><div><div style="font-weight:600">Translate product titles</div></div></div>
+      <div class="checkrow mt14"><span class="tick on"></span><div><div style="font-weight:600">Translate product descriptions</div></div></div>
+      <div class="card mt18" style="background:#faf9f9;border-style:dashed">
+        <div class="io-tag">Title left untouched</div>
+        <div class="io-text" style="margin-top:6px">NIKE | AIR ZOOM PEGASUS 41</div>
+        <div class="io-tag pl mt10" style="display:block">Description → Polish</div>
+        <div class="io-text" style="margin-top:6px">Lekkie buty do biegania z amortyzacją Zoom Air, stworzone na codzienne kilometry.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -12,3 +12,7 @@ prisma/dev.db-journal
 coverage/
 .vscode/
 .idea/
+
+# Listing asset build artifacts
+listing/node_modules/
+listing/out/

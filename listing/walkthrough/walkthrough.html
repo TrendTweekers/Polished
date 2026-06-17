@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{ --red:#d81e40; --ink:#1a1c1e; --muted:#6b7177; --line:#e3e3e3;
+    --green:#29845a; --green-bg:#e3f3ea; --blue:#1f6fd6; --blue-bg:#e6effb;
+    --grey-bg:#eef0f2; --grey-tx:#4a4f54;
+    --sans:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  html,body{ width:1280px; height:720px; }
+  body{ font-family:var(--sans); color:var(--ink);
+    background:linear-gradient(160deg,#ffffff 0%,#fdf1f3 55%,#fbe7ec 100%);
+    overflow:hidden; -webkit-font-smoothing:antialiased; }
+
+  .scene{ position:absolute; inset:0; opacity:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:54px 70px; }
+  /* every animation paused; record.mjs scrubs currentTime globally */
+  [data-anim]{ animation-play-state:paused !important; animation-fill-mode:both !important; }
+
+  @keyframes scene{ 0%{opacity:0} 7%{opacity:1} 93%{opacity:1} 100%{opacity:0} }
+  @keyframes pop{ 0%{opacity:0;transform:scale(.8)} 60%{opacity:1;transform:scale(1.06)} 100%{opacity:1;transform:scale(1)} }
+  @keyframes rise{ 0%{opacity:0;transform:translateY(16px)} 100%{opacity:1;transform:translateY(0)} }
+  @keyframes grow{ 0%{width:0} 100%{width:96%} }
+  @keyframes toast{ 0%{opacity:0;transform:translateY(18px)} 15%{opacity:1;transform:translateY(0)} 85%{opacity:1} 100%{opacity:0} }
+
+  .chip{ position:absolute; bottom:46px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; font-size:21px; font-weight:600;
+    padding:13px 26px; border-radius:14px; display:flex; align-items:center; gap:12px; }
+  .stepn{ width:26px;height:26px;border-radius:50%;background:var(--red);
+    display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800; }
+
+  .brandchip{ width:64px;height:64px;border-radius:18px;background:var(--red);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:27px;
+    position:relative; }
+  .brandchip::after{ content:"✦"; position:absolute; top:-9px; right:-9px; font-size:22px; color:var(--red); }
+
+  .card{ background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 26px;width:940px; }
+  .ctitle{ font-size:19px;font-weight:650; }
+  .muted{ color:var(--muted); } .small{ font-size:14px; }
+  .progress{ height:11px;border-radius:7px;background:#e7e9ec;overflow:hidden;margin-top:16px; }
+  .progress > i{ display:block;height:100%;background:var(--red);border-radius:7px;width:0; }
+  .row{ display:flex;align-items:center; } .between{ justify-content:space-between; } .g8{gap:8px;} .g12{gap:12px;}
+  .badge{ font-size:13px;font-weight:600;padding:4px 11px;border-radius:8px;display:inline-flex;align-items:center;gap:6px; }
+  .b-pending{ background:var(--grey-bg);color:var(--grey-tx); }
+  .b-trans{ background:var(--blue-bg);color:var(--blue); }
+  .b-pub{ background:var(--green-bg);color:var(--green); }
+  .btn{ font-size:15px;font-weight:600;padding:10px 18px;border-radius:10px;border:1px solid var(--line);background:#fff; }
+  .btn-primary{ background:var(--ink);color:#fff;border-color:var(--ink); }
+  .btn-red{ background:var(--red);color:#fff;border-color:var(--red); }
+  table{ width:100%;border-collapse:collapse;margin-top:14px; }
+  th{ text-align:left;font-size:13px;color:var(--muted);font-weight:650;padding:9px 10px;border-bottom:1px solid var(--line); }
+  td{ padding:12px 10px;border-bottom:1px solid #ececec;font-size:15px; } tr:last-child td{ border-bottom:none; }
+  .io{ background:#faf9f9;border:1px solid var(--line);border-radius:12px;padding:16px 18px; }
+  .io.pl{ background:#fff;border-color:#f1c6d1;box-shadow:0 0 0 3px #fdeef1; }
+  .iotag{ font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted); }
+  .iotag.pl{ color:var(--red); }
+  .iotext{ font-size:15px;line-height:1.5;margin-top:8px;color:#2a2d30; }
+  .grid2{ display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px; }
+</style></head>
+<body>
+
+  <!-- S1 intro -->
+  <div class="scene" data-anim style="animation:scene 4.5s 0s">
+    <div data-anim style="animation:pop 1s .3s"><div class="brandchip">PL</div></div>
+    <div data-anim style="animation:rise .8s .7s;font-size:52px;font-weight:800;letter-spacing:-.02em;margin-top:28px;text-align:center;line-height:1.1">
+      Make your store sound<br><span style="color:var(--red)">native in Polish</span></div>
+    <div data-anim style="animation:rise .8s 1s;font-size:22px;color:var(--muted);margin-top:16px">AI translation with a human review step.</div>
+  </div>
+
+  <!-- S2 scan -->
+  <div class="scene" data-anim style="animation:scene 5.5s 4s">
+    <div class="card">
+      <div class="row between"><div class="ctitle">Your products</div>
+        <span class="btn btn-primary" data-anim style="animation:pop .5s 4.6s">Scan all products</span></div>
+      <table><thead><tr><th>Original title</th><th>Polish title</th><th>Status</th></tr></thead><tbody>
+        <tr data-anim style="animation:rise .5s 5s"><td>Everyday Hydrating Face Serum</td><td class="muted">—</td><td><span class="badge b-pending">Pending</span></td></tr>
+        <tr data-anim style="animation:rise .5s 5.25s"><td>Wireless Noise-Cancelling Headphones</td><td class="muted">—</td><td><span class="badge b-pending">Pending</span></td></tr>
+        <tr data-anim style="animation:rise .5s 5.5s"><td>Organic Cotton Crew T-Shirt</td><td class="muted">—</td><td><span class="badge b-pending">Pending</span></td></tr>
+        <tr data-anim style="animation:rise .5s 5.75s"><td>Stainless Steel Water Bottle 1L</td><td class="muted">—</td><td><span class="badge b-pending">Pending</span></td></tr>
+      </tbody></table>
+    </div>
+    <div class="chip" data-anim style="animation:scene 5.5s 4s"><span class="stepn">1</span>Scan your products from Shopify</div>
+  </div>
+
+  <!-- S3 translate -->
+  <div class="scene" data-anim style="animation:scene 6.5s 9s">
+    <div class="card">
+      <div class="row between"><div class="ctitle">Translating into Polish</div>
+        <span class="btn" data-anim style="animation:pop .5s 9.4s">Translate selected</span></div>
+      <table><thead><tr><th>Original title</th><th>Polish title</th><th>Status</th></tr></thead><tbody>
+        <tr><td>Everyday Hydrating Face Serum</td><td data-anim style="animation:rise .5s 10.2s">Codzienne nawilżające serum do twarzy</td><td><span class="badge b-trans" data-anim style="animation:pop .5s 10.3s">Translated</span></td></tr>
+        <tr><td>Wireless Noise-Cancelling Headphones</td><td data-anim style="animation:rise .5s 10.6s">Bezprzewodowe słuchawki z redukcją szumów</td><td><span class="badge b-trans" data-anim style="animation:pop .5s 10.7s">Translated</span></td></tr>
+        <tr><td>Organic Cotton Crew T-Shirt</td><td data-anim style="animation:rise .5s 11s">T-shirt z bawełny organicznej</td><td><span class="badge b-trans" data-anim style="animation:pop .5s 11.1s">Translated</span></td></tr>
+        <tr><td>Stainless Steel Water Bottle 1L</td><td data-anim style="animation:rise .5s 11.4s">Butelka na wodę ze stali nierdzewnej 1L</td><td><span class="badge b-trans" data-anim style="animation:pop .5s 11.5s">Translated</span></td></tr>
+      </tbody></table>
+    </div>
+    <div class="chip" data-anim style="animation:scene 6.5s 9s"><span class="stepn">2</span>AI writes natural, native-quality Polish</div>
+  </div>
+
+  <!-- S4 review -->
+  <div class="scene" data-anim style="animation:scene 6.5s 15s">
+    <div class="card">
+      <div class="ctitle">Review &amp; edit before publishing</div>
+      <div class="grid2">
+        <div class="io" data-anim style="animation:rise .6s 15.5s"><div class="iotag">English</div>
+          <div class="iotext">Wake up your skin with our lightweight hydrating serum. Cruelty-free and made for all skin types.</div></div>
+        <div class="io pl" data-anim style="animation:rise .6s 15.8s"><div class="iotag pl">Polish</div>
+          <div class="iotext">Obudź swoją skórę naszym lekkim serum nawilżającym. Nietestowane na zwierzętach, stworzone dla każdego rodzaju cery.</div></div>
+      </div>
+      <div class="row g12" style="margin-top:18px;justify-content:flex-end">
+        <span class="btn">Save edits</span><span class="btn btn-red" data-anim style="animation:pop .5s 19.5s">Publish to Shopify</span></div>
+    </div>
+    <div class="chip" data-anim style="animation:scene 6.5s 15s"><span class="stepn">3</span>You approve every translation</div>
+  </div>
+
+  <!-- S5 publish -->
+  <div class="scene" data-anim style="animation:scene 5.5s 21s">
+    <div class="card">
+      <div class="row between"><div class="ctitle">Translation progress</div>
+        <span class="badge b-pub" data-anim style="animation:pop .5s 22.4s">47 published</span></div>
+      <div class="muted small" style="margin-top:6px">50 of 52 products translated into Polish.</div>
+      <div class="progress"><i data-anim style="animation:grow 1.4s 21.8s"></i></div>
+      <div class="row g12" style="margin-top:20px">
+        <span class="badge b-pub" data-anim style="animation:pop .4s 22.6s">Published</span>
+        <span class="badge b-pub" data-anim style="animation:pop .4s 22.8s">Published</span>
+        <span class="badge b-pub" data-anim style="animation:pop .4s 23s">Published</span>
+        <span class="muted small">Saved via the Shopify Translations API (locale pl).</span>
+      </div>
+    </div>
+    <div class="chip" data-anim style="animation:scene 5.5s 21s"><span class="stepn">4</span>Publish to Shopify in one click</div>
+  </div>
+
+  <!-- S6 outro -->
+  <div class="scene" data-anim style="animation:scene 4s 26s">
+    <div data-anim style="animation:pop .8s 26.3s"><div class="brandchip">PL</div></div>
+    <div data-anim style="animation:rise .7s 26.7s;font-size:40px;font-weight:800;margin-top:26px;text-align:center;letter-spacing:-.02em">Native Polish, reviewed before it publishes.</div>
+    <div data-anim style="animation:rise .7s 27s;font-size:22px;color:var(--red);font-weight:700;margin-top:14px">Polished · 14-day free trial</div>
+  </div>
+
+  <script>window.TOTAL_MS = 30000;</script>
+</body></html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><link rel="stylesheet" href="styles.css">
+<style>
+  .cmp { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:14px; }
+  .cmp .io-box { padding:18px 20px; }
+  .bad { border-color:#f1c4c4; box-shadow:0 0 0 3px #fdecec; background:#fff; }
+  .good { border-color:#bfe3cd; box-shadow:0 0 0 3px #e8f6ee; background:#fff; }
+  .tag2 { font-size:12.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; display:flex; align-items:center; gap:7px; }
+  .tag-bad { color:#b3261e; } .tag-good { color:var(--green); }
+  .src { font-size:13.5px; color:var(--muted); }
+  .txt { font-size:16px; line-height:1.5; margin-top:8px; color:#2a2d30; }
+  .err { color:#b3261e; text-decoration:underline wavy #d86b6b; font-weight:600; }
+  .fix { color:var(--green); font-weight:700; }
+  .ex + .ex { margin-top:18px; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="brandrow"><div class="brandchip">PL</div><div class="wordmark">Polished</div></div>
+  <div class="headline">Native-quality Polish, <span class="accent">not robotic machine translation</span></div>
+  <div class="subhead">Correct grammar, gender and the 7 Polish cases. The errors generic translators make, fixed.</div>
+
+  <div class="panel">
+    <div class="ex">
+      <div class="src">Source: “Everyday Hydrating Face Serum”</div>
+      <div class="cmp">
+        <div class="io-box bad"><div class="tag2 tag-bad">✗ Generic machine translation</div>
+          <div class="txt">Codzienn<span class="err">y</span> nawilżając<span class="err">y</span> serum do twarzy</div></div>
+        <div class="io-box good"><div class="tag2 tag-good">✓ Polished</div>
+          <div class="txt">Codzienn<span class="fix">e</span> nawilżając<span class="fix">e</span> serum do twarzy</div></div>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="src">Source: “…signature yellow welt stitching, cruelty-free”</div>
+      <div class="cmp">
+        <div class="io-box bad"><div class="tag2 tag-bad">✗ Generic machine translation</div>
+          <div class="txt">…charakterystycznym żółtym <span class="err">szykiem wzmocnienia</span>, <span class="err">okrucieństwo-wolne</span></div></div>
+        <div class="io-box good"><div class="tag2 tag-good">✓ Polished</div>
+          <div class="txt">…charakterystycznym żółtym <span class="fix">ściegiem na rancie</span>, <span class="fix">nietestowane na zwierzętach</span></div></div>
+      </div>
+    </div>
+
+    <div class="row gap12 mt18">
+      <span class="badge b-pub">Brand names preserved</span>
+      <span class="badge b-pub">SKUs &amp; URLs untouched</span>
+      <span class="badge b-pub">Correct formality</span>
+      <span class="badge b-pub">Idiomatic, not literal</span>
+    </div>
+  </div>
+</div>
+</body></html>

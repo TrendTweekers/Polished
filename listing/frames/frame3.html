@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><link rel="stylesheet" href="styles.css">
+<style>
+  .seg { display:inline-flex; border:1px solid #d4d7db; border-radius:11px; overflow:hidden; }
+  .seg div { padding:11px 22px; font-size:15px; font-weight:600; color:var(--grey-tx); border-right:1px solid #e1e3e6; }
+  .seg div:last-child { border-right:none; }
+  .seg div.on { background:var(--primary); color:#fff; }
+  .ex2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:18px; }
+  .tonebox { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 20px; }
+  .tonename { font-weight:700; font-size:15px; }
+  .tonenote { font-size:13px; color:var(--muted); }
+  .tonetxt { font-size:15.5px; line-height:1.5; margin-top:10px; color:#2a2d30; }
+</style></head>
+<body>
+<div class="stage">
+  <div class="brandrow"><div class="brandchip">PL</div><div class="wordmark">Polished</div></div>
+  <div class="headline">Formal, neutral, or casual. <span class="accent">Your brand voice in Polish</span></div>
+  <div class="subhead">One setting controls formality and phrasing across your whole catalog. Polish shoppers notice the difference.</div>
+
+  <div class="panel">
+    <div class="card">
+      <div class="card-title">Translation settings</div>
+      <div class="field-label mt14">Tone of voice</div>
+      <div class="seg">
+        <div>Formal · Pan/Pani</div>
+        <div class="on">Neutral · brand voice</div>
+        <div>Casual · forma „Ty”</div>
+      </div>
+    </div>
+
+    <div class="ex2">
+      <div class="tonebox">
+        <div class="tonename">Formal</div>
+        <div class="tonenote">Safe, professional. Uses polite address.</div>
+        <div class="tonetxt">Pozwól swojej skórze odzyskać blask dzięki naszemu lekkiemu serum nawilżającemu. Wchłania się w kilka sekund, pozostawiając cerę świeżą i gotową na cały dzień.</div>
+      </div>
+      <div class="tonebox">
+        <div class="tonename">Casual</div>
+        <div class="tonenote">Warm and direct, like a trendy DTC brand.</div>
+        <div class="tonetxt">Obudź swoją skórę naszym lekkim serum nawilżającym. Wchłania się w kilka sekund i zostawia twarz świeżą, odżywioną i gotową na nowy dzień.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

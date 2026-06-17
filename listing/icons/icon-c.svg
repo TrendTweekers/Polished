@@ -1,0 +1,6 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Polished icon C">
+  <rect width="1200" height="1200" fill="#FAF8F6"/>
+  <rect x="0" y="930" width="1200" height="270" fill="#D81E40"/>
+  <text x="600" y="600" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="380" fill="#1C1B1A">PL</text>
+  <path d="M1000 200 C1000 251 1025 276 1076 276 C1025 276 1000 301 1000 352 C1000 301 975 276 924 276 C975 276 1000 251 1000 200 Z" fill="#D81E40"/>
+</svg>
