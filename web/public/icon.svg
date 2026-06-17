@@ -1,0 +1,7 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Polished app icon">
+  <rect width="1200" height="1200" fill="#D81E40"/>
+  <path d="M350 800 L330 980 L520 808 Z" fill="#FFFFFF"/>
+  <rect x="200" y="270" width="720" height="540" rx="120" fill="#FFFFFF"/>
+  <path d="M1030 130 C1030 193.65 1061.35 225 1125 225 C1061.35 225 1030 256.35 1030 320 C1030 256.35 998.65 225 935 225 C998.65 225 1030 193.65 1030 130 Z" fill="#FFFFFF"/>
+  <text x="560" y="645" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="300" fill="#D81E40">PL</text>
+</svg>
