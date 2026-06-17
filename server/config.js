@@ -28,9 +28,11 @@ export const config = {
     appUrl: required("SHOPIFY_APP_URL").replace(/\/$/, ""),
   },
 
-  openai: {
-    apiKey: required("OPENAI_API_KEY"),
-    model: optional("OPENAI_MODEL", "gpt-4o-mini"),
+  anthropic: {
+    apiKey: required("ANTHROPIC_API_KEY"),
+    // Sonnet 4.6 is the default for native-quality Polish. Override to
+    // claude-haiku-4-5 to cut cost on very large catalogs.
+    model: optional("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
   },
 
   billing: {

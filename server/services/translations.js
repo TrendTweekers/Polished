@@ -1,6 +1,6 @@
 import { prisma } from "../db.js";
 import { graphqlClient } from "../shopify.js";
-import { translateProduct } from "./openai.js";
+import { translateProduct } from "./translator.js";
 import { idToProductGid } from "./products.js";
 
 const POLISH_LOCALE = "pl";
