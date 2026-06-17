@@ -22,6 +22,12 @@ app.use(compression());
 // --- Health check (no auth) -------------------------------------------------
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
+// --- Public privacy policy (no auth, standalone page) -----------------------
+app.get("/privacy", (_req, res) => {
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.sendFile(path.join(__dirname, "legal", "privacy.html"));
+});
+
 // --- Webhooks: raw text body so HMAC verification stays valid ---------------
 app.post("/api/webhooks", express.text({ type: "*/*" }), handleWebhook);
 

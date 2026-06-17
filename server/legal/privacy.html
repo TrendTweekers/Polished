@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy — Polished</title>
+    <style>
+      :root { --red: #d81e40; --ink: #1c1b1a; --muted: #5a5754; --line: #ececec; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: #faf9f7; color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.65;
+      }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+      header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+      .logo {
+        width: 44px; height: 44px; border-radius: 12px; background: var(--red);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-weight: 700; font-size: 18px; flex-shrink: 0;
+      }
+      h1 { font-size: 28px; margin: 24px 0 4px; }
+      .updated { color: var(--muted); font-size: 14px; margin: 0 0 32px; }
+      h2 { font-size: 19px; margin: 36px 0 10px; }
+      p, li { color: #2c2a28; font-size: 16px; }
+      ul { padding-left: 22px; }
+      li { margin-bottom: 6px; }
+      a { color: var(--red); }
+      .brand { font-weight: 700; }
+      hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+      footer { color: var(--muted); font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="logo">PL</div>
+        <span class="brand">Polished</span>
+      </header>
+
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: 17 June 2026</p>
+
+      <p>
+        Polished ("the app", "we", "us") is a Shopify app that translates product
+        titles and descriptions into Polish. This policy explains what data the app
+        accesses, how it is used, and how it is protected. By installing Polished on
+        your Shopify store, you agree to this policy.
+      </p>
+
+      <h2>Information we access and store</h2>
+      <p>To provide the service, the app stores the following for your store:</p>
+      <ul>
+        <li><strong>Store identifiers and credentials:</strong> your store's myshopify domain, the offline access token issued by Shopify, and the granted API scopes. These are used to make authorized requests to the Shopify Admin API on your behalf.</li>
+        <li><strong>Product content you choose to translate:</strong> the original and translated titles and descriptions of products you scan or translate in the app.</li>
+        <li><strong>App configuration:</strong> your translation settings (tone, fields to translate, auto-translate), glossary terms, and translation job records.</li>
+      </ul>
+      <p>
+        <strong>We do not collect, store, or process your customers' personal data.</strong>
+        The app works only with product catalog content and store configuration.
+      </p>
+
+      <h2>How we use this information</h2>
+      <ul>
+        <li>To read your products from Shopify and store their text for review.</li>
+        <li>To generate Polish translations and publish approved translations back to Shopify via the Shopify Translations API.</li>
+        <li>To apply your chosen tone, glossary, and per-field settings.</li>
+      </ul>
+
+      <h2>Third-party services</h2>
+      <p>The app relies on the following providers to operate:</p>
+      <ul>
+        <li><strong>Anthropic (Claude):</strong> product titles and descriptions you choose to translate are sent to Anthropic's API to generate the Polish translation. No customer personal data is sent. See Anthropic's privacy policy at <a href="https://www.anthropic.com/legal/privacy">anthropic.com/legal/privacy</a>.</li>
+        <li><strong>Shopify:</strong> the app reads and writes store data through Shopify's APIs under the scopes you grant.</li>
+        <li><strong>Hosting and database:</strong> the app and its PostgreSQL database are hosted on Railway with encrypted connections.</li>
+      </ul>
+      <p>We do not sell your data or share it with any party other than the providers listed above, and only to the extent needed to operate the app.</p>
+
+      <h2>Data retention and deletion</h2>
+      <ul>
+        <li>Your data is retained only while the app is installed.</li>
+        <li>When you uninstall the app, the <code>app/uninstalled</code> webhook triggers automatic deletion of your store record and all related translations, glossary terms, settings, and jobs.</li>
+        <li>On a Shopify <code>shop/redact</code> request, all stored data for your store is deleted.</li>
+        <li>Because the app stores no customer personal data, <code>customers/data_request</code> and <code>customers/redact</code> requests return no customer information.</li>
+      </ul>
+
+      <h2>Security</h2>
+      <p>
+        Access tokens and store data are stored in a secured PostgreSQL database and
+        transmitted over HTTPS. Each request from the embedded app is verified using a
+        Shopify session token, and all webhooks are verified with HMAC signatures.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        You can request access to, correction of, or deletion of your store's data at
+        any time by contacting us. Uninstalling the app deletes your data automatically.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        We may update this policy from time to time. Material changes will be reflected
+        by updating the "Last updated" date above.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy or your data? Email
+        <a href="mailto:admin@stackedboost.com">admin@stackedboost.com</a>.
+      </p>
+
+      <hr />
+      <footer>Polished is operated by Stackedboost.</footer>
+    </div>
+  </body>
+</html>
