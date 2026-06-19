@@ -8,7 +8,6 @@ import serveStatic from "serve-static";
 import { config, isProd } from "./config.js";
 import { shopify } from "./shopify.js";
 import { prisma } from "./db.js";
-import { authRouter } from "./auth.js";
 import { apiRouter } from "./routes/api.js";
 import { handleWebhook } from "./webhooks.js";
 
@@ -40,9 +39,6 @@ app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", `frame-ancestors ${frameAncestors};`);
   next();
 });
-
-// --- OAuth routes -----------------------------------------------------------
-app.use("/api", authRouter);
 
 // --- Authenticated app API --------------------------------------------------
 app.use("/api", express.json({ limit: "2mb" }), apiRouter);

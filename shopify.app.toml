@@ -9,6 +9,10 @@ embedded = true
 
 [access_scopes]
 scopes = "read_products,write_products,read_translations,write_translations"
+# Managed installation: Shopify grants the scopes above on install and the app
+# obtains tokens via token exchange. No cookie-based OAuth (which fails in the
+# admin iframe). This is what makes a reviewer's fresh install grant read_products.
+use_legacy_install_flow = false
 
 [auth]
 redirect_urls = [
