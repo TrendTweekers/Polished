@@ -31,10 +31,17 @@ export async function verifyRequest(req, res, next) {
     const shopDomain = new URL(payload.dest).host;
 
     let store = await prisma.store.findUnique({ where: { shopDomain } });
-    if (!store || !hasRequiredScopes(store) || isAccessTokenExpired(store)) {
-      // No token, stale scopes, or an expired token — exchange the live session
-      // token for a fresh expiring offline token. We always have the session
-      // token here, so this is the most reliable refresh path for user flows.
+    const legacyNonExpiringToken = store && !store.accessTokenExpiresAt;
+    if (
+      !store ||
+      !hasRequiredScopes(store) ||
+      legacyNonExpiringToken ||
+      isAccessTokenExpired(store)
+    ) {
+      // No token, stale scopes, a deprecated non-expiring token (migrate it), or
+      // an expired token — exchange the live session token for a fresh expiring
+      // offline token. We always have the session token here, so this is the most
+      // reliable refresh path for user flows.
       try {
         store = await exchangeOfflineToken(shopDomain, sessionToken);
       } catch (exchangeError) {
