@@ -14,6 +14,10 @@ model Store {
   shopDomain  String   @unique
   accessToken String
   scope       String
+  // Expiring offline token metadata (Shopify requires expiring tokens).
+  accessTokenExpiresAt  DateTime?
+  refreshToken          String?
+  refreshTokenExpiresAt DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

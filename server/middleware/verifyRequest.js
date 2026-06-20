@@ -1,6 +1,5 @@
-import { shopify } from "../shopify.js";
+import { shopify, exchangeOfflineToken, isAccessTokenExpired } from "../shopify.js";
 import { prisma } from "../db.js";
-import { performTokenExchange } from "../auth.js";
 import { config } from "../config.js";
 
 /** True if the stored grant covers every scope the app currently requires. */
@@ -32,11 +31,12 @@ export async function verifyRequest(req, res, next) {
     const shopDomain = new URL(payload.dest).host;
 
     let store = await prisma.store.findUnique({ where: { shopDomain } });
-    if (!store || !hasRequiredScopes(store)) {
-      // No token yet, or the stored grant predates a scope change — (re)exchange
-      // the session token for a fresh offline token with the current scopes.
+    if (!store || !hasRequiredScopes(store) || isAccessTokenExpired(store)) {
+      // No token, stale scopes, or an expired token — exchange the live session
+      // token for a fresh expiring offline token. We always have the session
+      // token here, so this is the most reliable refresh path for user flows.
       try {
-        store = await performTokenExchange(shopDomain, sessionToken);
+        store = await exchangeOfflineToken(shopDomain, sessionToken);
       } catch (exchangeError) {
         console.error(
           `[auth] token exchange failed for ${shopDomain}:`,

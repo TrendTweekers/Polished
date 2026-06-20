@@ -96,18 +96,18 @@ Tone control, glossary, brand-safe
 
 ---
 
-## Screenshot alt text (accessibility + SEO)
+## Screenshot alt text (image description, limit 64)
 
-Maps to the rendered PNGs in `out/`.
+Maps to the rendered PNGs in `out/`. Shopify caps this field at 64 characters.
 
 | Asset | Alt text | Count |
 | --- | --- | --- |
-| `feature-media.png` | Polished dashboard showing products translated from English to Polish with status badges. | 89 |
-| `screenshot-1-review.png` | Reviewing a product's English description beside its Polish translation before publishing. | 90 |
-| `screenshot-2-quality.png` | Robotic machine translation compared with Polished's correct, native-quality Polish. | 84 |
-| `screenshot-3-tone.png` | Tone of voice setting with formal and casual Polish examples side by side. | 74 |
-| `screenshot-4-glossary.png` | Glossary of locked brand terms and toggles to translate titles or descriptions. | 79 |
-| `screenshot-5-publish.png` | Translation progress near complete with products published to Shopify in Polish. | 80 |
+| `feature-media.png` | Polished dashboard: products translated to native Polish | 56 |
+| `screenshot-1-review.png` | Reviewing English and Polish side by side before publishing | 59 |
+| `screenshot-2-quality.png` | Robotic machine translation vs native-quality Polish | 52 |
+| `screenshot-3-tone.png` | Tone setting: formal and casual Polish examples | 47 |
+| `screenshot-4-glossary.png` | Glossary terms and per-field translation toggles | 48 |
+| `screenshot-5-publish.png` | Products published to Shopify in Polish, near complete | 54 |
 
 ---
 
