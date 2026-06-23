@@ -97,8 +97,8 @@ export default function App() {
       showToast(`Scan complete — ${res.scanned} products found`);
       await Promise.all([loadProducts(), refreshSummary()]);
     } catch (error) {
-      if (error.status === 402 && error.data?.confirmationUrl) {
-        redirectToBilling(error.data.confirmationUrl);
+      if (error.status === 402 && error.data?.planSelectionUrl) {
+        redirectToBilling(error.data.planSelectionUrl);
         return;
       }
       showToast(error.message, { error: true });
@@ -122,8 +122,8 @@ export default function App() {
       );
       await Promise.all([loadProducts(), refreshSummary()]);
     } catch (error) {
-      if (error.status === 402 && error.data?.confirmationUrl) {
-        redirectToBilling(error.data.confirmationUrl);
+      if (error.status === 402 && error.data?.planSelectionUrl) {
+        redirectToBilling(error.data.planSelectionUrl);
         return;
       }
       showToast(error.message, { error: true });
@@ -133,7 +133,7 @@ export default function App() {
   }
 
   function redirectToBilling(url) {
-    // Billing confirmation must open at the top level, outside the iframe.
+    // The plan selection page must open at the top level, outside the iframe.
     if (window.top) {
       window.top.location.href = url;
     } else {
@@ -157,7 +157,7 @@ export default function App() {
   }
 
   const billingInactive =
-    me?.billing?.enabled && me?.billing?.active === false && me?.billing?.confirmationUrl;
+    me?.billing?.enabled && me?.billing?.active === false && me?.billing?.planSelectionUrl;
 
   return (
     <Page
@@ -169,13 +169,13 @@ export default function App() {
           <Layout.Section>
             <Banner
               tone="warning"
-              title="Subscription required"
+              title="Choose a plan"
               action={{
-                content: "Start 14-day free trial",
-                onAction: () => redirectToBilling(me.billing.confirmationUrl),
+                content: "Choose a plan",
+                onAction: () => redirectToBilling(me.billing.planSelectionUrl),
               }}
             >
-              <p>Start your Polished subscription to scan and translate products.</p>
+              <p>Pick a Polished plan to scan and translate products. 14-day free trial included.</p>
             </Banner>
           </Layout.Section>
         )}

@@ -84,7 +84,7 @@ apiRouter.get(
     ).length;
     const published = products.filter((p) => productStatus(p, enabled) === "published").length;
 
-    let billing = { active: true, confirmationUrl: null };
+    let billing = { active: true, planSelectionUrl: null };
     try {
       billing = await getBillingStatus(store.shopDomain);
     } catch (error) {

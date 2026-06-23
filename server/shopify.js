@@ -1,17 +1,13 @@
 import "@shopify/shopify-api/adapters/node";
-import {
-  shopifyApi,
-  LATEST_API_VERSION,
-  BillingInterval,
-  Session,
-} from "@shopify/shopify-api";
+import { shopifyApi, LATEST_API_VERSION, Session } from "@shopify/shopify-api";
 import { config } from "./config.js";
 import { prisma } from "./db.js";
 
 const hostName = config.shopify.appUrl.replace(/^https?:\/\//, "");
 
-export const STARTER_PLAN = "Starter";
-
+// Billing is handled by Shopify App Pricing (managed pricing) — plans live in
+// the Partner Dashboard and Shopify hosts the charge screen, so no Billing API
+// plan config is declared here. See server/billing.js.
 export const shopify = shopifyApi({
   apiKey: config.shopify.apiKey,
   apiSecretKey: config.shopify.apiSecret,
@@ -19,14 +15,6 @@ export const shopify = shopifyApi({
   hostName,
   apiVersion: LATEST_API_VERSION,
   isEmbeddedApp: true,
-  billing: {
-    [STARTER_PLAN]: {
-      amount: 19,
-      currencyCode: "USD",
-      interval: BillingInterval.Every30Days,
-      trialDays: 14,
-    },
-  },
 });
 
 export const API_VERSION = LATEST_API_VERSION;

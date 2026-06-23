@@ -14,8 +14,10 @@ function optional(name, fallback = "") {
   return value && value.trim() !== "" ? value.trim() : fallback;
 }
 
+const NODE_ENV = optional("NODE_ENV", "development");
+
 export const config = {
-  nodeEnv: optional("NODE_ENV", "development"),
+  nodeEnv: NODE_ENV,
   port: Number(optional("PORT", "3000")),
 
   shopify: {
@@ -36,7 +38,14 @@ export const config = {
   },
 
   billing: {
-    enabled: optional("BILLING_ENABLED", "false").toLowerCase() === "true",
+    // Paid app: enforce subscription in production by default. Set
+    // BILLING_ENABLED=false to bypass while developing locally.
+    enabled:
+      optional("BILLING_ENABLED", NODE_ENV === "production" ? "true" : "false").toLowerCase() ===
+      "true",
+    // App handle from the Partner Dashboard, used to build the Shopify App
+    // Pricing plan selection page URL. Required when billing is enabled.
+    appHandle: optional("SHOPIFY_APP_HANDLE", ""),
   },
 };
 
