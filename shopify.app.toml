@@ -3,6 +3,7 @@
 # URLs with your deployed app URL.
 
 name = "Polished"
+handle = "polished-1"
 client_id = "8666b78a6f43df292b628f439389b934"
 application_url = "https://polished-production-5325.up.railway.app"
 embedded = true
