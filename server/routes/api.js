@@ -39,6 +39,7 @@ function groupByProduct(rows) {
       status: row.status,
       qualityFlags: row.qualityFlags,
       manuallyEdited: row.manuallyEdited,
+      approved: row.approved,
     };
     if (row.field === "title") entry.title = field;
     if (row.field === "description") entry.description = field;
@@ -54,15 +55,18 @@ function fieldsEnabled(settings) {
 }
 
 // Overall status is derived only from the fields the merchant chose to translate.
+// pending -> needs_approval (translated, awaiting sign-off) -> approved -> published.
 function productStatus(product, enabled = { title: true, description: true }) {
-  const statuses = [];
-  if (enabled.title && product.title) statuses.push(product.title.status);
-  if (enabled.description && product.description) statuses.push(product.description.status);
-  if (statuses.length === 0) return "pending";
+  const fields = [];
+  if (enabled.title && product.title) fields.push(product.title);
+  if (enabled.description && product.description) fields.push(product.description);
+  if (fields.length === 0) return "pending";
+  const statuses = fields.map((f) => f.status);
   if (statuses.every((s) => s === "published")) return "published";
   if (statuses.some((s) => s === "stale")) return "stale";
-  if (statuses.every((s) => s === "done" || s === "published")) return "done";
-  return "pending";
+  if (!statuses.every((s) => s === "done" || s === "published")) return "pending";
+  const allApproved = fields.every((f) => f.approved || f.status === "published");
+  return allApproved ? "approved" : "needs_approval";
 }
 
 // --- Account / dashboard summary -------------------------------------------
@@ -79,10 +83,12 @@ apiRouter.get(
     const enabled = fieldsEnabled(settings);
 
     const total = products.length;
+    const statusOf = (p) => productStatus(p, enabled);
     const translated = products.filter((p) =>
-      ["done", "published"].includes(productStatus(p, enabled))
+      ["needs_approval", "approved", "published"].includes(statusOf(p))
     ).length;
-    const published = products.filter((p) => productStatus(p, enabled) === "published").length;
+    const approved = products.filter((p) => statusOf(p) === "approved").length;
+    const published = products.filter((p) => statusOf(p) === "published").length;
 
     let billing = { active: true, planSelectionUrl: null };
     try {
@@ -99,7 +105,7 @@ apiRouter.get(
         translateTitles: true,
         translateDescriptions: true,
       },
-      counts: { total, translated, published },
+      counts: { total, translated, approved, published },
       billing: { enabled: config.billing.enabled, ...billing },
     });
   })
@@ -166,6 +172,40 @@ apiRouter.post(
   })
 );
 
+// --- Review approval gate ---------------------------------------------------
+// Approve a product's translated fields, unlocking publishing.
+apiRouter.post(
+  "/products/:id/approve",
+  requireBilling,
+  a(async (req, res) => {
+    const result = await prisma.productTranslation.updateMany({
+      where: { storeId: req.store.id, shopifyProductId: String(req.params.id), status: "done" },
+      data: { approved: true },
+    });
+    if (result.count === 0) {
+      return res.status(400).json({ error: "nothing_to_approve" });
+    }
+    res.json({ ok: true, approved: result.count });
+  })
+);
+
+// Send a translation back for changes — clears approval and any published flag
+// so it returns to an editable, needs-approval state.
+apiRouter.post(
+  "/products/:id/request-changes",
+  a(async (req, res) => {
+    const result = await prisma.productTranslation.updateMany({
+      where: {
+        storeId: req.store.id,
+        shopifyProductId: String(req.params.id),
+        status: { in: ["done", "published"] },
+      },
+      data: { approved: false, status: "done" },
+    });
+    res.json({ ok: true, updated: result.count });
+  })
+);
+
 // --- Translation ------------------------------------------------------------
 apiRouter.post(
   "/translate",
@@ -206,6 +246,8 @@ apiRouter.put(
         translatedText,
         manuallyEdited: true,
         status: "done",
+        // Editing the text invalidates any prior approval — it must be re-approved.
+        approved: false,
       },
     });
     res.json({ ok: true, translation: updated });

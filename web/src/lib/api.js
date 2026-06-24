@@ -49,6 +49,8 @@ export const api = {
   scan: () => request("POST", "/products/scan"),
   translate: (productIds, force = false) =>
     request("POST", "/translate", { productIds, force }),
+  approve: (productId) => request("POST", `/products/${productId}/approve`),
+  requestChanges: (productId) => request("POST", `/products/${productId}/request-changes`),
   publish: (productId) => request("POST", `/products/${productId}/publish`),
   editTranslation: (id, translatedText) =>
     request("PUT", `/translations/${id}`, { translatedText }),

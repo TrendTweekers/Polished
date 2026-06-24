@@ -78,6 +78,7 @@ export async function runTranslationForProduct(store, productId, { force = false
         qualityFlags: result.qualityFlags,
         status: "done",
         manuallyEdited: false,
+        approved: false,
       },
     });
     translated += 1;
@@ -93,6 +94,7 @@ export async function runTranslationForProduct(store, productId, { force = false
         qualityFlags: result.qualityFlags,
         status: "done",
         manuallyEdited: false,
+        approved: false,
       },
     });
     translated += 1;
@@ -208,6 +210,12 @@ export async function publishProductTranslations(store, productId) {
   );
   if (publishable.length === 0) {
     throw new Error("Nothing to publish — translate this product first.");
+  }
+
+  // Approval gate: every translated (not-yet-published) field must be approved.
+  const unapproved = publishable.filter((r) => r.status === "done" && !r.approved);
+  if (unapproved.length > 0) {
+    throw new Error("Approve the translation before publishing.");
   }
 
   const client = await graphqlClient(store.shopDomain);

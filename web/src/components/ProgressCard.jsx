@@ -1,7 +1,7 @@
 import { Card, BlockStack, InlineStack, Text, ProgressBar, Badge } from "@shopify/polaris";
 
 export default function ProgressCard({ counts }) {
-  const { total = 0, translated = 0, published = 0 } = counts ?? {};
+  const { total = 0, translated = 0, approved = 0, published = 0 } = counts ?? {};
   const pct = total > 0 ? Math.round((translated / total) * 100) : 0;
 
   return (
@@ -13,6 +13,7 @@ export default function ProgressCard({ counts }) {
           </Text>
           <InlineStack gap="200">
             <Badge tone="info">{`${translated} translated`}</Badge>
+            <Badge tone="attention">{`${approved} approved`}</Badge>
             <Badge tone="success">{`${published} published`}</Badge>
           </InlineStack>
         </InlineStack>

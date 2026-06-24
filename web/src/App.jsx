@@ -24,7 +24,8 @@ import ReviewModal from "./components/ReviewModal.jsx";
 const STATUS_FILTERS = [
   { label: "All", value: "all" },
   { label: "Pending", value: "pending" },
-  { label: "Translated", value: "done" },
+  { label: "Needs approval", value: "needs_approval" },
+  { label: "Approved", value: "approved" },
   { label: "Published", value: "published" },
   { label: "Out of date", value: "stale" },
 ];
