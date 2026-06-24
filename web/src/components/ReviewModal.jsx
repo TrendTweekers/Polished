@@ -207,6 +207,13 @@ export default function ReviewModal({ product, open, onClose, onSaved, settings 
             )}
           </InlineStack>
 
+          {hasTranslation && (
+            <Text as="p" variant="bodySm" tone="subdued">
+              The English column is your Shopify source text and is read-only here. To change it,
+              edit the product in Shopify, then re-scan in Polished.
+            </Text>
+          )}
+
           {!hasTranslation && (
             <Banner tone="info">
               This product hasn’t been translated yet. Use “Translate with AI” to generate a

@@ -11,7 +11,7 @@ import {
 } from "@shopify/polaris";
 import { statusBadge } from "../lib/status.js";
 
-function truncate(text, n = 70) {
+function truncate(text, n = 38) {
   if (!text) return "—";
   return text.length > n ? `${text.slice(0, n)}…` : text;
 }
@@ -60,6 +60,7 @@ export default function ProductTable({ products, onSelectionChange, onReview }) 
         key={product.id}
         position={index}
         selected={selectedResources.includes(product.id)}
+        onClick={() => onReview(product)}
       >
         <IndexTable.Cell>
           <Text as="span" variant="bodyMd">
@@ -75,9 +76,7 @@ export default function ProductTable({ products, onSelectionChange, onReview }) 
           <Badge tone={badge.tone}>{badge.label}</Badge>
         </IndexTable.Cell>
         <IndexTable.Cell>
-          <Button variant="plain" onClick={() => onReview(product)}>
-            Review / edit
-          </Button>
+          <Button onClick={() => onReview(product)}>Review / edit</Button>
         </IndexTable.Cell>
       </IndexTable.Row>
     );
